@@ -30,5 +30,5 @@ server -> browser: data.json
 browser -> server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
 server -> browser: data.json
 
-
+event handler is triggered and create a new note which contains the content and it is rendered in the Note list.
 
