@@ -19,8 +19,9 @@ const App = () => {
      ];
     const [part1, part2, part3] = parts;
     console.log(part1.name);
-    console.log(part2.exercise);
+    console.log(part2.name);
     console.log(part1);
+
     const Header = (props) => {
         return (
             <div><p>{props.course}</p></div>
@@ -32,7 +33,8 @@ const App = () => {
             <p>{props.part}{props.score}</p>
         )
     };
-    const Content = (props) => {
+    const Content = (parts) => {
+
         return(
             <div>
                 <Part part={part1.name} score={part1.exercise} />
@@ -42,20 +44,19 @@ const App = () => {
         )
     };
 
-    const Total = (props) => {
+    const Total = (parts) => {
         return(
-            <div><p>Number of exercise {props.number}</p></div>
+            <div><p>Number of exercise {part1.exercise + part2.exercise + part3.exercise}</p></div>
         )
     };
 
     return(
         <div>
             <Header course = {course} />
-            <Content/>
-            <Total number = {part1.exercise + part2.exercise + part3.exercise} />
+            <Content parts= {parts}/>
+            <Total number = {parts} />
         </div>
     )
 };
-
 
 ReactDOM.render(<App />, document.getElementById('root'));
