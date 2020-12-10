@@ -15,14 +15,23 @@ const CoursePart = ({course}) =>{
         </ul>
     )
 };
+
+const CourseSum = ({course}) => {
+
+    const total = course.parts.reduce((s,p) => {
+        return s + p.exercise },0)
+    return(
+        <h3>total of {total} exercises</h3>
+    )
+};
+
 const Course = ({course}) => {
-    console.log(course)
-    console.log(course.parts)
-    console.log('2')
+
     return (
         <div>
             <CourseName course={course}/>
             <CoursePart course={course}/>
+            <CourseSum course={course}/>
         </div>
     )
 };
@@ -50,7 +59,6 @@ const App = () => {
             }
         ]
     };
-
     return <Course course = {course} />
 
 };
