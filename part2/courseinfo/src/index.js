@@ -38,7 +38,8 @@ const Course = ({course}) => {
 
 const App = () => {
 
-    const course = {
+    const course = [
+      {
         id: 1,
         name: 'Half Stack application development',
         parts: [
@@ -58,10 +59,37 @@ const App = () => {
                 id:3
             }
         ]
-    };
-    return <Course course = {course} />
+      },
+      {
+            name: 'Node.js',
+            id: 2,
+            parts: [
+                {
+                    name: 'Routing',
+                    exercise: 3,
+                    id: 1
+                },
+                {
+                    name: 'MiddleWares',
+                    exercise: 7,
+                    id: 2
+                },
+
+         ]
+      }
+     ]
+
+    return (
+        <div>
+            <h2>Web development Curriculum</h2>
+            {/*<Course course = {course} />*/}
+            <ul>
+                {course.map(course => <li key={course.id}> {< Course course= {course} />}</li>)}
+            </ul>
+        </div>
+
+    )
 
 };
-
 
 ReactDOM.render(<App />, document.getElementById('root'));
