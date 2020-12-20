@@ -7,16 +7,28 @@ const Names = ({person}) =>{
         <li key={person.id}>{person.name} {person.number}</li>
     )
 };
+
+const Persons = ({person}) =>{
+    return(
+        <ul>
+            {person.map((person,i) => <Names key={i} person={person}/>)}
+        </ul>
+    )
+};
+
+// const Filter = ({person}) =>{
 //
-// const Filter = ({person}) => {
-//     const personList = person.map(a => a.name).toUpperCase();
-//     const showUpperCasePerson = showPerson.toUpperCase();
-//     const showList = personList.filter(b => b !== showUpperCasePerson);
+//     const personList = person.map(a => a.name);
+//     const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
+//     const personIndex = personList.indexOf(showList.toString())
+//
 //     return(
-//         {showList.map(showList => <li>{showList}</li>)}
+//         <div>
+//             {showList.map(c => <li>{c} {person[personIndex].number}</li>)}
+//         </div>
 //     )
-//
-// };
+// }
+
 
 const App = () => {
     const [persons, setPerson] = useState([
@@ -33,13 +45,14 @@ const App = () => {
 
     const [showPerson, setShowPerson] = useState('');
 
+
     const personList = persons.map(a => a.name);
     const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
     const personIndex = personList.indexOf(showList.toString())
 
     // console.log(personList);
     // console.log(showUpperCasePerson);
-    console.log(personList)
+
 
 
     const addName = (event) =>{
@@ -54,7 +67,7 @@ const App = () => {
         setNewNumber('')
         // console.log(nameObject)
         console.log(persons.map(a => a.name.toUpperCase()))
-        console.log(showPerson.toUpperCase())
+        // console.log(showPerson.toUpperCase())
 
 
     };
@@ -81,6 +94,7 @@ const App = () => {
             <h2>Phone Book</h2>
 
             <div>filter shown with <input value={showPerson} onChange={handleShowPerson}/></div>
+            {/*<Filter person={persons}/>*/}
             <div>
                 {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}
             </div>
@@ -98,9 +112,7 @@ const App = () => {
                 </div>
             </form>
             <h2>Numbers</h2>
-                <ul>
-                    {persons.map((person,i) => <Names key={i} person={person}/>)}
-                </ul>
+            <Persons person={persons}/>
         </div>
     )
 };
