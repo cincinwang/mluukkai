@@ -1,17 +1,74 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const ResultList = ({countryList, showCountry, countries}) =>{
+    // const bigCountryList = countryList.map(a => a.toUpperCase());
+    // const bigShowCountry = showCountry.toUpperCase();
+    const result = countryList.filter(countryList => countryList.toLowerCase().match(showCountry.toLowerCase()))
+    if(showCountry.trim()=== ''){
+        return null
+    }
+    else if(result.length === 1){
+        const oneResult = countryList.indexOf(result.toString());
+        console.log(countries[oneResult])
+        console.log(countries[oneResult].flag)
+        return(
+            <div>
+                <h3>{countries[oneResult].name}</h3>
+                <div>capital {countries[oneResult].capital}</div>
+                <div>population {countries[oneResult].population}</div>
+                <h4>Languages</h4>
+                <ul>
+                    {countries[oneResult].languages.map(a => <li>{a.name}</li>)}
+                </ul>
+                <div><img src={countries[oneResult].flag} alt={countries[oneResult].name}/></div>
+            </div>
+
+        )
+    }
+    else if(result.length>10){
+        return (
+            <p>Too many matches, specify another filter</p>
+        )
+    }
+    return(
+        <div>
+            {result.map(result =><div>{result}</div>)}
+        </div>
+    )
+};
+
+const App = () => {
+    const [showCountry, setShowCountry] = useState('');
+    const [countries, setCountry] = useState([]);
+    const countryList = countries.map(a => a.name);
+
+    const handleShowCountry = (event) =>{
+        setShowCountry(event.target.value)
+    };
+
+
+    useEffect(()=>{
+        axios
+            .get('https://restcountries.eu/rest/v2/all')
+            .then(response => {
+            // console.log(response.data);
+                setCountry(response.data)
+        })
+    }, []);
+    // console.log(countries)
+
+  return (
+      <div>
+        <div>find countries <input value={showCountry} onChange={handleShowCountry} /></div>
+        <ResultList countryList={countryList} showCountry={showCountry} countries={countries}/>
+      </div>
+  )
+
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+
