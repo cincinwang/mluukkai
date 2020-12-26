@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios'
 
 
 const Names = ({person}) =>{
@@ -31,13 +32,15 @@ const Persons = ({person}) =>{
 
 
 const App = () => {
-    const [persons, setPerson] = useState([
-        {name: 'Arto Hellas',
-         number: '1010101001'
-        },
-        {name: 'Lily', number:'03948930'},
-        {name:'Rose', number:'989830943'}
-    ]);
+    // const [persons, setPerson] = useState([
+    //     {name: 'Arto Hellas',
+    //      number: '1010101001'
+    //     },
+    //     {name: 'Lily', number:'03948930'},
+    //     {name:'Rose', number:'989830943'}
+    // ]);
+
+    const [persons, setPerson] = useState([])
 
     const [newName, setNewName] = useState('');
 
@@ -53,7 +56,13 @@ const App = () => {
     // console.log(personList);
     // console.log(showUpperCasePerson);
 
-
+    useEffect(()=>{
+        axios.get('http://localhost:3003/persons').then(response => {
+            console.log(response.data);
+            setPerson(response.data)
+        });
+        }
+    , []);
 
     const addName = (event) =>{
         event.preventDefault();
