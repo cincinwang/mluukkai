@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 
-const ResultList = ({countryList, showCountry, countries}) =>{
+const ResultList = ({countryList, showCountry, countries, handleShow}) =>{
     // const bigCountryList = countryList.map(a => a.toUpperCase());
     // const bigShowCountry = showCountry.toUpperCase();
+
+
     const result = countryList.filter(countryList => countryList.toLowerCase().match(showCountry.toLowerCase()))
     if(showCountry.trim()=== ''){
         return null
@@ -23,7 +25,7 @@ const ResultList = ({countryList, showCountry, countries}) =>{
                 <ul>
                     {countries[oneResult].languages.map(a => <li>{a.name}</li>)}
                 </ul>
-                <div><img src={countries[oneResult].flag} alt={countries[oneResult].name}/></div>
+                <div><img src={countries[oneResult].flag} width="20%" alt={countries[oneResult].name}/></div>
             </div>
 
         )
@@ -35,7 +37,7 @@ const ResultList = ({countryList, showCountry, countries}) =>{
     }
     return(
         <div>
-            {result.map(result =><div>{result}</div>)}
+            {result.map(result =><div>{result} <button onClick={()=>handleShow(result)}>show</button></div>)}
         </div>
     )
 };
@@ -48,6 +50,11 @@ const App = () => {
     const handleShowCountry = (event) =>{
         setShowCountry(event.target.value)
     };
+
+    const handleShow = (e) =>{
+        // e.preventDefault();
+        setShowCountry(e)
+    }
 
 
     useEffect(()=>{
@@ -63,7 +70,7 @@ const App = () => {
   return (
       <div>
         <div>find countries <input value={showCountry} onChange={handleShowCountry} /></div>
-        <ResultList countryList={countryList} showCountry={showCountry} countries={countries}/>
+        <ResultList countryList={countryList} showCountry={showCountry} countries={countries} handleShow={handleShow}/>
       </div>
   )
 
