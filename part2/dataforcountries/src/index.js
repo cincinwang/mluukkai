@@ -3,12 +3,46 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 
+const Weather = ({capital}) =>{
+    const [weather, setWeather] = useState({});
+    const [weatherCurrent, setWeatherCurrent] =useState({})
+    const api_key = process.env.REACT_APP_API_KEY;
+
+        useEffect(()=>{
+        axios
+            .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${capital}`)
+            .then(response => {
+                console.log(response.data);
+                setWeather(response.data.current)
+            })
+
+
+        }, []);
+
+
+    console.log('2')
+    console.log(weather)
+
+    return(
+        <div>
+            <h4>Weather in {capital}</h4>
+            <div><strong>temperature:</strong> {weather.temperature} Celcius</div>
+            <div><img src={weather.weather_icons} width="20%"/></div>
+            <div><strong>wind:</strong> {weather.speed} mph direction SSW </div>
+        </div>
+
+
+    )
+};
+
+
 const ResultList = ({countryList, showCountry, countries, handleShow}) =>{
     // const bigCountryList = countryList.map(a => a.toUpperCase());
     // const bigShowCountry = showCountry.toUpperCase();
 
-
     const result = countryList.filter(countryList => countryList.toLowerCase().match(showCountry.toLowerCase()))
+
+
     if(showCountry.trim()=== ''){
         return null
     }
@@ -26,6 +60,8 @@ const ResultList = ({countryList, showCountry, countries, handleShow}) =>{
                     {countries[oneResult].languages.map(a => <li>{a.name}</li>)}
                 </ul>
                 <div><img src={countries[oneResult].flag} width="20%" alt={countries[oneResult].name}/></div>
+                <Weather capital={countries[oneResult].capital}/>
+
             </div>
 
         )
@@ -54,7 +90,7 @@ const App = () => {
     const handleShow = (e) =>{
         // e.preventDefault();
         setShowCountry(e)
-    }
+    };
 
 
     useEffect(()=>{
@@ -66,6 +102,8 @@ const App = () => {
         })
     }, []);
     // console.log(countries)
+
+
 
   return (
       <div>
