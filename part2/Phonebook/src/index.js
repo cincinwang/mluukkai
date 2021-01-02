@@ -57,7 +57,7 @@ const App = () => {
     // console.log(showUpperCasePerson);
 
     useEffect(()=>{
-        axios.get('http://localhost:3003/persons').then(response => {
+        axios.get('http://localhost:3001/persons').then(response => {
             console.log(response.data);
             setPerson(response.data)
         });
@@ -71,9 +71,19 @@ const App = () => {
             id: persons.length +1,
             number: newNumber
         };
-        setPerson(persons.concat(nameObject));
-        setNewName('')
-        setNewNumber('')
+
+        axios
+            .post('http://localhost:3001/persons',nameObject)
+            .then(response => {
+                setPerson(persons.concat(nameObject));
+                setNewName('')
+                setNewNumber('')
+                }
+
+            )
+        // setPerson(persons.concat(nameObject));
+        // setNewName('')
+        // setNewNumber('')
         // console.log(nameObject)
         console.log(persons.map(a => a.name.toUpperCase()))
         // console.log(showPerson.toUpperCase())
