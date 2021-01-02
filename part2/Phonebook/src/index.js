@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios'
+import nameBook from "./services/notes";
 
 
 const Names = ({person}) =>{
@@ -57,7 +58,8 @@ const App = () => {
     // console.log(showUpperCasePerson);
 
     useEffect(()=>{
-        axios.get('http://localhost:3001/persons').then(response => {
+        nameBook
+        .getAll('http://localhost:3001/persons').then(response => {
             console.log(response.data);
             setPerson(response.data)
         });
@@ -72,8 +74,8 @@ const App = () => {
             number: newNumber
         };
 
-        axios
-            .post('http://localhost:3001/persons',nameObject)
+        nameBook
+            .create(nameObject)
             .then(response => {
                 setPerson(persons.concat(nameObject));
                 setNewName('')
