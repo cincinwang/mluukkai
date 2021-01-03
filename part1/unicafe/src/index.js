@@ -27,6 +27,7 @@ const App = () =>{
    const average =  (good + bad*(-1))/all;
    const positive = good/all;
 
+
    const handleGoodClick = () => {
        setAll(allClicks.concat('G'));
        setGood(good + 1)
