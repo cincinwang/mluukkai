@@ -1,19 +1,19 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import axios from 'axios'
 import nameBook from "./services/notes";
 
 
-const Names = ({person}) =>{
-    return(
-        <li key={person.id}>{person.name} {person.number}</li>
-    )
-};
+// const Names = ({person}, handleDelete) =>{
+//
+//     return(
+//         <li key={person.id}>{person.name} {person.number} <button onClick={handleDelete(person.id)}>delete</button></li>
+//     )
+// };
 
-const Persons = ({person}) =>{
+const Persons = ({person,handleDelete}) =>{
     return(
         <ul>
-            {person.map((person,i) => <Names key={i} person={person}/>)}
+            {person.map((person) => <li key={person.id}>{person.name} {person.number} <button onClick={()=>handleDelete(person.name,person.id)}>delete</button></li>)}
         </ul>
     )
 };
@@ -70,25 +70,24 @@ const App = () => {
         event.preventDefault();
         const nameObject ={
             name: newName,
-            id: persons.length +1,
+            // id: persons.length +1,
             number: newNumber
         };
 
         nameBook
             .create(nameObject)
             .then(response => {
-                setPerson(persons.concat(nameObject));
+                setPerson(persons.concat(response.data));
                 setNewName('')
                 setNewNumber('')
                 }
 
-            )
+            );
         // setPerson(persons.concat(nameObject));
         // setNewName('')
         // setNewNumber('')
         // console.log(nameObject)
         console.log(persons.map(a => a.name.toUpperCase()))
-        // console.log(showPerson.toUpperCase())
 
 
     };
@@ -108,6 +107,19 @@ const App = () => {
 
     const handleNumberChange =(event) =>{
         setNewNumber(event.target.value)
+    };
+
+    const handleDelete = (name,id) =>{
+        const person = persons.find(person => person.id ===id)
+        if(window.confirm(`delete ${name}`)){
+            nameBook
+                .deleteName(person.id)
+                .then(response =>{
+                    setPerson(persons.filter(person => person.id !== id))
+                })
+
+        }
+
     };
 
     return(
@@ -133,7 +145,7 @@ const App = () => {
                 </div>
             </form>
             <h2>Numbers</h2>
-            <Persons person={persons}/>
+            <Persons person={persons} handleDelete={handleDelete}/>
         </div>
     )
 };
