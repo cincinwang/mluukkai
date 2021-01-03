@@ -1,15 +1,28 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
 import nameBook from "./services/notes";
+import './index.css'
 
+
+
+const Notification =({message}) =>{
+    if(message===null){
+        return null
+    }
+
+    return(
+        <div className="popNote">
+            {message}
+        </div>
+    )
+}
 
 const Search = ({persons,showPerson})=>{
-        console.log(showPerson)
 
         const personList = persons.map(a => a.name);
         const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
         const personIndex = personList.indexOf(showList.toString());
-        console.log(personList)
+
         return (
             <div>
                 {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}
@@ -75,6 +88,8 @@ const App = () => {
 
     const [showPerson, setShowPerson] = useState('');
 
+    const [popMessage, setPopMessage] = useState(null)
+
 
     // const personList = persons.map(a => a.name);
     // const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
@@ -86,7 +101,7 @@ const App = () => {
     useEffect(()=>{
         nameBook
         .getAll('http://localhost:3001/persons').then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             setPerson(response.data)
         });
         }
@@ -102,15 +117,24 @@ const App = () => {
 
         if(persons.find(person => person.name === newName)){
             const person = persons.find(person => person.name === nameObject.name);
-            const changedNumber = {...person, number:newNumber}
+            const changedNumber = {...person, number:newNumber};
             // const person = persons.find(person => person.id === id)
             if(window.confirm(`${nameObject.name} is already added to phonebook, replace the old number with a new one? `)){
                 nameBook
                     .update(person.id,changedNumber)
                     .then(response => {
-                        setPerson(persons.map(p => p.id !== person.id ? p:response.data));
+                        setPerson(persons.map(p => p.id !== person.id ? p : response.data));
                         setNewName('')
                         setNewNumber('')
+                        setPopMessage(
+                            `${person.name}'s number is updated`
+                        )
+                        setTimeout(()=>{
+                            setPopMessage(null)
+                        }, 4000)
+
+                    console.log(response.data)
+                    console.log(persons)
                     })
             }
         }
@@ -121,6 +145,12 @@ const App = () => {
                         setPerson(persons.concat(response.data));
                         setNewName('')
                         setNewNumber('')
+                    setPopMessage(
+                        `Added ${nameObject.name}`
+                    )
+                    setTimeout(()=>{
+                        setPopMessage(null)
+                    }, 5000)
                     }
 
                 );
@@ -175,7 +205,7 @@ const App = () => {
     return(
         <div>
             <h2>Phone Book</h2>
-
+            <Notification message={popMessage}/>
             <div>filter shown with <input value={showPerson} onChange={handleShowPerson}/></div>
             {/*<Filter person={persons}/>*/}
             {/*<div>*/}
