@@ -6,13 +6,12 @@ import './index.css'
 
 
 const Notification =({message}) =>{
-    if(message===null){
+    if(message.content ===''){
         return null
     }
-
     return(
-        <div className="popNote">
-            {message}
+        <div className={message.success ? 'success':'fail'}>
+            {message.content}
         </div>
     )
 }
@@ -88,7 +87,7 @@ const App = () => {
 
     const [showPerson, setShowPerson] = useState('');
 
-    const [popMessage, setPopMessage] = useState(null)
+    const [popMessage, setPopMessage] = useState({content:'', success:null})
 
 
     // const personList = persons.map(a => a.name);
@@ -126,15 +125,20 @@ const App = () => {
                         setPerson(persons.map(p => p.id !== person.id ? p : response.data));
                         setNewName('')
                         setNewNumber('')
-                        setPopMessage(
-                            `${person.name}'s number is updated`
+                        setPopMessage({content:`${person.name}'s number is updated`,success:true}
+
                         )
                         setTimeout(()=>{
-                            setPopMessage(null)
+                            setPopMessage({content:'', success:null})
                         }, 4000)
-
                     console.log(response.data)
                     console.log(persons)
+                    })
+                    .catch(error =>{
+                        setPopMessage({content:`Information of ${person.name} has already been removed from the server`, success:false})
+                        setTimeout(()=>{
+                            setPopMessage({content:'', success:null})
+                        }, 5000)
                     })
             }
         }
@@ -145,15 +149,21 @@ const App = () => {
                         setPerson(persons.concat(response.data));
                         setNewName('')
                         setNewNumber('')
-                    setPopMessage(
-                        `Added ${nameObject.name}`
-                    )
-                    setTimeout(()=>{
-                        setPopMessage(null)
-                    }, 5000)
-                    }
+                        setPopMessage(
+                            {content:`Added ${nameObject.name}`, success:true}
+                        )
+                        setTimeout(()=>{
+                            setPopMessage({content:'', success:null})
+                        }, 5000)
+                }
 
-                );
+                )
+                .catch(error =>{
+                    setPopMessage({content:`Sorry, this person cannot be added`, success:false})
+                })
+                    setTimeout(()=>{
+                        setPopMessage({content:'', success:null})
+                    }, 5000)
         }
         // nameBook
         //     .create(nameObject)
@@ -196,6 +206,12 @@ const App = () => {
                 .deleteName(person.id)
                 .then(response =>{
                     setPerson(persons.filter(person => person.id !== id))
+                })
+                .catch(error =>{
+                    setPopMessage(`${person.name} has already been removed from the server`, false)
+                    setTimeout(()=>{
+                        setPopMessage(null)
+                    }, 5000)
                 })
 
         }
