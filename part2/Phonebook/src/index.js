@@ -3,6 +3,32 @@ import React, {useState, useEffect} from 'react';
 import nameBook from "./services/notes";
 
 
+const Search = ({persons,showPerson})=>{
+        console.log(showPerson)
+
+        const personList = persons.map(a => a.name);
+        const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
+        const personIndex = personList.indexOf(showList.toString());
+        console.log(personList)
+        return (
+            <div>
+                {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}
+            </div>
+        )
+
+    // const personList = persons.map(a => a.name);
+    // const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
+    // const personIndex = personList.indexOf(showList.toString());
+    //
+    // return (
+    //     <div>
+    //         {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}
+    //     </div>
+    // )
+
+}
+
+
 // const Names = ({person}, handleDelete) =>{
 //
 //     return(
@@ -50,9 +76,9 @@ const App = () => {
     const [showPerson, setShowPerson] = useState('');
 
 
-    const personList = persons.map(a => a.name);
-    const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
-    const personIndex = personList.indexOf(showList.toString())
+    // const personList = persons.map(a => a.name);
+    // const showList = personList.filter(b => b.toUpperCase() === showPerson.toUpperCase());
+    // const personIndex = personList.indexOf(showList.toString());
 
     // console.log(personList);
     // console.log(showUpperCasePerson);
@@ -74,20 +100,44 @@ const App = () => {
             number: newNumber
         };
 
-        nameBook
-            .create(nameObject)
-            .then(response => {
-                setPerson(persons.concat(response.data));
-                setNewName('')
-                setNewNumber('')
-                }
+        if(persons.find(person => person.name === newName)){
+            const person = persons.find(person => person.name === nameObject.name);
+            const changedNumber = {...person, number:newNumber}
+            // const person = persons.find(person => person.id === id)
+            if(window.confirm(`${nameObject.name} is already added to phonebook, replace the old number with a new one? `)){
+                nameBook
+                    .update(person.id,changedNumber)
+                    .then(response => {
+                        setPerson(persons.map(p => p.id !== person.id ? p:response.data));
+                        setNewName('')
+                        setNewNumber('')
+                    })
+            }
+        }
+        else {
+            nameBook
+                .create(nameObject)
+                .then(response => {
+                        setPerson(persons.concat(response.data));
+                        setNewName('')
+                        setNewNumber('')
+                    }
 
-            );
+                );
+        }
+        // nameBook
+        //     .create(nameObject)
+        //     .then(response => {
+        //         setPerson(persons.concat(response.data));
+        //         setNewName('')
+        //         setNewNumber('')
+        //         }
+        //
+        //     );
         // setPerson(persons.concat(nameObject));
         // setNewName('')
         // setNewNumber('')
         // console.log(nameObject)
-        console.log(persons.map(a => a.name.toUpperCase()))
 
 
     };
@@ -128,10 +178,11 @@ const App = () => {
 
             <div>filter shown with <input value={showPerson} onChange={handleShowPerson}/></div>
             {/*<Filter person={persons}/>*/}
-            <div>
-                {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}
-            </div>
+            {/*<div>*/}
+            {/*    {showList.map(c => <li>{c} {persons[personIndex].number}</li>)}*/}
+            {/*</div>*/}
 
+            <Search persons={persons} showPerson={showPerson}/>
             <h3>Add a new</h3>
             <form onSubmit={addName}>
                 <div>
