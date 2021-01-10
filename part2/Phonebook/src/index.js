@@ -159,7 +159,7 @@ const App = () => {
 
                 )
                 .catch(error =>{
-                    setPopMessage({content:`Sorry, this person cannot be added`, success:false})
+                    setPopMessage({content:`${error.message}`, success:false})
                 })
                     setTimeout(()=>{
                         setPopMessage({content:'', success:null})
